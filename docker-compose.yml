@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:9.6-alpine
+    restart: always
+    networks:
+      - net
+    ports:
+      - "5432"
+    volumes:
+      - ./tmp/postgresql:/users/j0ker/dev/postgresql
+    environment: &postgres_env
+      POSTGRES_DB: subtask
+      POSTGRES_USER: subtask
+      POSTGRES_PASSWORD: subtask
+
+  redis:
+    image: redis:3.2-alpine
+    restart: always
+    networks:
+      - net
+    ports:
+      - "6379"
+
+  backend:
+    image: ruby:latest
+    restart: always
+    volumes:
+      - .:/backend
+    environment:
+      <<: *postgres_env
+      POSTGRES_HOST: postgres
+    networks:
+      - net
+    ports:
+      - "0.0.0.0:3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    command: sh -c "apt update && apt install -y nodejs && cd /backend && bundle install && bundle exec rake db:migrate && bundle exec rake db:seed && bundle exec rails s -b 0.0.0.0"
+
+networks:
+  net:
+    ipam:
+      driver: default
