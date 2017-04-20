@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-  skip_before_filter :verify_authenticity_token
   before_action :set_task, only: [:show, :edit, :check, :update, :destroy]
 
   # GET /tasks
@@ -20,6 +19,7 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
+    @tasks = Task.all.order(:id)
   end
 
   # GET /tasks/1/check
@@ -76,6 +76,6 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.fetch(:task, {})
+      params.require(:task).permit(:name, :parent_id)
     end
 end

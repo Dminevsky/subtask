@@ -1,14 +1,12 @@
-/*jshint esversion: 6 */
-
-let tasks;
+var tasks;
 
 function getTasks() {
   fetch('/tasks.json')
     .then(function(response) {
       return response.json();
     })
-    .then(function(data) {
-      tasks = data;
+    .then(function(entities) {
+      tasks = entities;
     })
     .catch( console.log );
 }
@@ -18,8 +16,8 @@ function deleteTask(id) {
     .then(function(response) {
       return response.json();
     })
-    .then(function(data) {
-      console.log(data);
+    .then(function(tasks) {
+      console.log(tasks);
     })
     .catch( console.log );
   }

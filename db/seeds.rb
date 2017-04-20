@@ -11,7 +11,7 @@ tasks = []
 (1..50).each do |e|
   parent_id = rand(1..50)
 
-  if parent_id > e
+  if parent_id >= e
     tasks.push({name: "task#{e}"})
   else
     tasks.push({name: "task#{e}", parent_id: parent_id})
